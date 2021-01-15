@@ -46,5 +46,10 @@ jobs:
         uses: WyriHaximus/github-action-helm3@v2
         with:
           exec: helm repo index charts/
+      - name: debug
+        run: |
+          ls charts/
+          cat charts/index.yaml
+          ls .
       - name: Upload index to GCS
         run: gsutil cp charts/index.yaml gs://aleph-helm-charts
