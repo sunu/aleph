@@ -23,7 +23,7 @@ jobs:
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
           export_default_credentials: true
       - name: Copy existing charts for index regeneration
-        run: gsutil -m cp -r gs://bucket-89 . && mv aleph-helm-charts charts
+        run: gsutil -m cp -r gs://bucket-89 . && mv bucket-89 charts
 
       - name: Package chart
         uses: WyriHaximus/github-action-helm3@v2
