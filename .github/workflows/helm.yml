@@ -23,7 +23,7 @@ jobs:
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
           export_default_credentials: true
       - name: Copy existing charts for index regeneration
-        run: gsutil -m cp -r gs://aleph-helm-charts . && mv aleph-helm-charts charts
+        run: gsutil -m cp -r gs://bucket-89 . && mv aleph-helm-charts charts
 
       - name: Package chart
         uses: WyriHaximus/github-action-helm3@v2
@@ -32,7 +32,7 @@ jobs:
             rm -f charts/aleph-${{ steps.get_version.outputs.VERSION }}-dev.tgz
             helm package contrib/helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }}-dev --destination charts/
       - name: Upload chart to GCS
-        run: gsutil cp charts/aleph-${{ steps.get_version.outputs.VERSION }}-dev.tgz gs://aleph-helm-charts
+        run: gsutil cp charts/aleph-${{ steps.get_version.outputs.VERSION }}-dev.tgz gs://bucket-89
       - name: Package chart
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         uses: WyriHaximus/github-action-helm3@v2
@@ -40,7 +40,7 @@ jobs:
           exec: helm package contrib/helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }} --destination charts/
       - name: Upload chart to GCS
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-        run: gsutil cp charts/aleph-${{ steps.get_version.outputs.VERSION }}.tgz gs://aleph-helm-charts
+        run: gsutil cp charts/aleph-${{ steps.get_version.outputs.VERSION }}.tgz gs://bucket-89
 
       - name: Generate index
         uses: WyriHaximus/github-action-helm3@v2
@@ -52,4 +52,4 @@ jobs:
           cat charts/index.yaml
           ls .
       - name: Upload index to GCS
-        run: gsutil cp charts/index.yaml gs://aleph-helm-charts
+        run: gsutil cp charts/index.yaml gs://bucket-89/index.yaml
